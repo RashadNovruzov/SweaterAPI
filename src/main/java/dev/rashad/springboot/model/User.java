@@ -1,5 +1,6 @@
 package dev.rashad.springboot.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -36,6 +37,22 @@ public class User implements UserDetails {
   private String about;
   @Enumerated(EnumType.STRING)
   private Role role;
+
+  @ManyToMany
+  @JoinTable(
+          name = "Follower_Following",
+          joinColumns = {@JoinColumn(name = "channel_id")},
+          inverseJoinColumns = {@JoinColumn(name = "follower_id")}
+  )
+  private List<User> followers = new ArrayList<>();
+
+  @ManyToMany
+  @JoinTable(
+          name = "Follower_Following",
+          joinColumns = {@JoinColumn(name = "follower_id")},
+          inverseJoinColumns = {@JoinColumn(name = "channel_id")}
+  )
+  private List<User> followings = new ArrayList<>();
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
