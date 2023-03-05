@@ -3,6 +3,7 @@ package dev.rashad.springboot.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -36,9 +37,10 @@ public class User implements UserDetails {
 
   private String about;
   @Enumerated(EnumType.STRING)
+  @Column(name = "role")
   private Role role;
 
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(
           name = "Follower_Following",
           joinColumns = {@JoinColumn(name = "channel_id")},
@@ -46,13 +48,17 @@ public class User implements UserDetails {
   )
   private List<User> followers = new ArrayList<>();
 
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(
           name = "Follower_Following",
           joinColumns = {@JoinColumn(name = "follower_id")},
           inverseJoinColumns = {@JoinColumn(name = "channel_id")}
   )
   private List<User> followings = new ArrayList<>();
+
+  public String getName(){
+    return this.username;
+  }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -82,5 +88,18 @@ public class User implements UserDetails {
   @Override
   public boolean isEnabled() {
     return true;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    User user = (User) o;
+    return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(about, user.about) && role == user.role;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, username, email, password, about, role);
   }
 }

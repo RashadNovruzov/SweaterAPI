@@ -1,5 +1,6 @@
 package dev.rashad.springboot.service;
 
+import dev.rashad.springboot.exceptions.UserNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,7 +27,7 @@ public class AuthService {
     authenticationManager.authenticate(
       new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
     );
-    User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+    User user = userRepository.findByEmail(request.getEmail()).orElseThrow(()->new UserNotFoundException("Not found"));
     String jwt = jwtService.generateToken(user);
     return AuthResponseDto.builder()
       .token(jwt)

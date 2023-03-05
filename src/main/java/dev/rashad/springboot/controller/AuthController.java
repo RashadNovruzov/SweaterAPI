@@ -23,7 +23,7 @@ public class AuthController {
   private final AuthService authService;
   private final RegisterValidator registerValidator;
 
-  @PostMapping
+  @PostMapping("/login")
   public ResponseEntity<AuthResponseDto> login(@RequestBody @Valid LoginRequestDto loginRequestDto, BindingResult bindingResult) {
     if(bindingResult.hasErrors()){
       StringBuffer message = new StringBuffer();
