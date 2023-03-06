@@ -1,18 +1,19 @@
 package dev.rashad.springboot.controller;
 
+import dev.rashad.springboot.dto.EditProfileDto;
 import dev.rashad.springboot.dto.UserDto;
+import dev.rashad.springboot.exceptions.IncorrectData;
 import dev.rashad.springboot.exceptions.UserNotFoundException;
 import dev.rashad.springboot.model.User;
 import dev.rashad.springboot.repository.UserRepository;
 import dev.rashad.springboot.service.SubscriptionService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.Optional;
@@ -61,6 +62,20 @@ public class UserController {
     public ResponseEntity<String> unfollowUser(@PathVariable("id") int id) throws UserNotFoundException{
         subscriptionService.unfollow(id);
         return ResponseEntity.ok("Unfollowed");
+    }
+
+    @PostMapping("/edit-profile")
+    public ResponseEntity<String> edit(@RequestBody @Valid EditProfileDto editProfileDto, BindingResult bindingResult){
+        if (bindingResult.hasErrors()){
+            StringBuffer message = new StringBuffer();
+            bindingResult.getFieldErrors().stream().forEach(e->message.append(e.getField()+":"+e.getDefaultMessage()+"\n"));
+            throw new IncorrectData(message.toString());
+        }
+        User user = getUserFromContext();
+        user.setAbout(editProfileDto.getAbout());
+        user.setUsername(editProfileDto.getUsername());
+        userRepository.save(user);
+        return ResponseEntity.ok("Edited");
     }
 
     private UserDto getUserDto(User user){
