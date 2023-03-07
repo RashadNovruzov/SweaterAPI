@@ -3,6 +3,7 @@ package dev.rashad.springboot.controller;
 import dev.rashad.springboot.dto.LoginRequestDto;
 import dev.rashad.springboot.exceptions.UserNotFoundException;
 import dev.rashad.springboot.service.AuthService;
+import dev.rashad.springboot.utils.CreatingException;
 import dev.rashad.springboot.utils.RegisterValidator;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -25,22 +26,14 @@ public class AuthController {
 
   @PostMapping("/login")
   public ResponseEntity<AuthResponseDto> login(@RequestBody @Valid LoginRequestDto loginRequestDto, BindingResult bindingResult) {
-    if(bindingResult.hasErrors()){
-      StringBuffer message = new StringBuffer();
-      bindingResult.getFieldErrors().stream().forEach(e->message.append(e.getField()+":"+e.getDefaultMessage()+"\n"));
-      throw new UserNotFoundException(message.toString());
-    }
+    CreatingException.throwUserNotFoundException(bindingResult);
     return ResponseEntity.ok(authService.login(loginRequestDto));
   }
   
   @PostMapping("/register")
   public ResponseEntity<AuthResponseDto> register(@RequestBody @Valid RegisterRequestDto registerRequestDto, BindingResult bindingResult) {
     registerValidator.validate(registerRequestDto,bindingResult);
-    if (bindingResult.hasErrors()){
-      StringBuffer message = new StringBuffer();
-      bindingResult.getFieldErrors().stream().forEach(e->message.append(e.getField()+":"+e.getDefaultMessage()+"\n"));
-      throw new UserNotFoundException(message.toString());
-    }
+    CreatingException.throwIncorrectDataException(bindingResult);
     return ResponseEntity.ok(authService.register(registerRequestDto));
   }
 }

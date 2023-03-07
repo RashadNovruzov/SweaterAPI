@@ -56,6 +56,9 @@ public class User implements UserDetails {
   )
   private List<User> followings = new ArrayList<>();
 
+  @OneToMany(mappedBy = "user")
+  private List<Post> posts;
+
   public String getName(){
     return this.username;
   }

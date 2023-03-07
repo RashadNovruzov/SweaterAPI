@@ -7,6 +7,7 @@ import dev.rashad.springboot.exceptions.UserNotFoundException;
 import dev.rashad.springboot.model.User;
 import dev.rashad.springboot.repository.UserRepository;
 import dev.rashad.springboot.service.SubscriptionService;
+import dev.rashad.springboot.utils.CreatingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -66,11 +67,7 @@ public class UserController {
 
     @PostMapping("/edit-profile")
     public ResponseEntity<String> edit(@RequestBody @Valid EditProfileDto editProfileDto, BindingResult bindingResult){
-        if (bindingResult.hasErrors()){
-            StringBuffer message = new StringBuffer();
-            bindingResult.getFieldErrors().stream().forEach(e->message.append(e.getField()+":"+e.getDefaultMessage()+"\n"));
-            throw new IncorrectData(message.toString());
-        }
+        CreatingException.throwIncorrectDataException(bindingResult);
         User user = getUserFromContext();
         user.setAbout(editProfileDto.getAbout());
         user.setUsername(editProfileDto.getUsername());
