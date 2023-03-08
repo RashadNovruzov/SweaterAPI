@@ -16,7 +16,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class SubscriptionService {
+public class UserService {
     private final UserRepository userRepository;
 
     public Map<Integer,String> getFollowers(){
@@ -42,7 +42,14 @@ public class SubscriptionService {
             user.getFollowings().add(user1);
             userRepository.save(user);
         }
+    }
 
+    public Map<Integer,String> findUser(String name){
+        Map<Integer,String> map = new HashMap<>();
+        List<User> users = userRepository.findByUsernameContaining(name);
+        if(users.isEmpty()) return map;
+        users.stream().forEach((u)->map.put(u.getId(),u.getUsername()));
+        return map;
     }
 
     private User getUserFromContext(){
@@ -58,6 +65,5 @@ public class SubscriptionService {
             user1.getFollowers().remove(user);
             userRepository.save(user);
         }
-
     }
 }

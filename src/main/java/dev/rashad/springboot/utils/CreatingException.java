@@ -14,6 +14,10 @@ public abstract class CreatingException {
         }
     }
 
+    public static void throwUserNotFoundException(String message){
+        throw new UserNotFoundException(message);
+    }
+
     public static void throwIncorrectDataException(BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             StringBuffer message = new StringBuffer();

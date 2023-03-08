@@ -2,11 +2,10 @@ package dev.rashad.springboot.controller;
 
 import dev.rashad.springboot.dto.EditProfileDto;
 import dev.rashad.springboot.dto.UserDto;
-import dev.rashad.springboot.exceptions.IncorrectData;
 import dev.rashad.springboot.exceptions.UserNotFoundException;
 import dev.rashad.springboot.model.User;
 import dev.rashad.springboot.repository.UserRepository;
-import dev.rashad.springboot.service.SubscriptionService;
+import dev.rashad.springboot.service.UserService;
 import dev.rashad.springboot.utils.CreatingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,7 @@ import java.util.Optional;
 public class UserController {
 
     private final UserRepository userRepository;
-    private final SubscriptionService subscriptionService;
+    private final UserService userService;
 
     @GetMapping("/my-profile")
     public UserDto numOfFollowingsAndFollowers(){
@@ -34,14 +33,19 @@ public class UserController {
         return getUserDto(user);
     }
 
+    @GetMapping
+    public Map<Integer,String> findUser(@RequestParam("query") String name){
+        return userService.findUser(name);
+    }
+
     @GetMapping("/followers")
     public Map<Integer,String> getFollowers(){
-        return subscriptionService.getFollowers();
+        return userService.getFollowers();
     }
 
     @GetMapping("/followings")
     public Map<Integer,String> followings(){
-        return subscriptionService.getFollowings();
+        return userService.getFollowings();
     }
 
     @GetMapping("/{id}")
@@ -55,13 +59,13 @@ public class UserController {
 
     @GetMapping("/follow/{id}")
     public ResponseEntity<String> followUser(@PathVariable("id") int id) throws UserNotFoundException{
-        subscriptionService.follow(id);
+        userService.follow(id);
         return ResponseEntity.ok("Followed!");
     }
 
     @GetMapping("/unfollow/{id}")
     public ResponseEntity<String> unfollowUser(@PathVariable("id") int id) throws UserNotFoundException{
-        subscriptionService.unfollow(id);
+        userService.unfollow(id);
         return ResponseEntity.ok("Unfollowed");
     }
 
