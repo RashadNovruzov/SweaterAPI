@@ -11,11 +11,13 @@ import java.util.List;
 @NoArgsConstructor
 public class ResponsePostDto {
 
+    private Integer id;
     private String postText;
 
     private List<String> tagsTitle = new ArrayList<>();
 
-    public ResponsePostDto(String postText, List<Tag> tags){
+    public ResponsePostDto(Integer id,String postText, List<Tag> tags){
+        this.id = id;
         this.postText = postText;
         tags.stream().forEach(t->tagsTitle.add(t.getTagTitle()));
     }

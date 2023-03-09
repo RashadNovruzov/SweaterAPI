@@ -37,7 +37,7 @@ public class PostController {
     public ResponseEntity<List<ResponsePostDto>> getPosts(){
         List<ResponsePostDto> posts = new ArrayList<>();
         List<Post> userPosts = getUserFromContext().getPosts();
-        userPosts.stream().forEach(p->posts.add(new ResponsePostDto(p.getPostText(), p.getTags())));
+        userPosts.stream().forEach(p->posts.add(new ResponsePostDto(p.getId(),p.getPostText(), p.getTags())));
         return ResponseEntity.ok(posts);
     }
 
@@ -51,8 +51,17 @@ public class PostController {
         return  ResponseEntity.ok(postService.findPostsByTag(query));
     }
 
+    @GetMapping("{id}")
+    public ResponsePostDto getPost(@PathVariable("id") int id){
+        return postService.getPost(id);
+    }
 
-
+    @PostMapping("{id}")
+    public ResponseEntity<String> edit(@RequestBody @Valid PostDto postDto,@PathVariable("id") int id){
+        postService.edit(postDto,id);
+        return ResponseEntity.ok("Edited!");
+    }
+    
     private Post convertToPost(PostDto postDto){
         Post post = new Post();
         post.setPostText(postDto.getPostText());
