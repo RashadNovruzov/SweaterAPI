@@ -32,5 +32,5 @@ public class Tag {
             joinColumns = {@JoinColumn(name = "tag_id")},
             inverseJoinColumns = {@JoinColumn(name = "post_id")}
     )
-    private List<Tag> posts;
+    private List<Post> posts;
 }

@@ -46,6 +46,11 @@ public class PostController {
         return ResponseEntity.ok(postService.findUserPosts(id));
     }
 
+    @GetMapping
+    public ResponseEntity<List<ResponsePostDto>> getPostsByTag(@RequestParam("query") String query){
+        return  ResponseEntity.ok(postService.findPostsByTag(query));
+    }
+
 
 
     private Post convertToPost(PostDto postDto){
