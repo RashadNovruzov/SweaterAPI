@@ -52,8 +52,8 @@ public class PostController {
     }
 
     @GetMapping("{id}")
-    public ResponsePostDto getPost(@PathVariable("id") int id){
-        return postService.getPost(id);
+    public ResponseEntity<ResponsePostDto> getPost(@PathVariable("id") int id){
+        return ResponseEntity.ok(postService.getPost(id));
     }
 
     @PostMapping("{id}")
@@ -61,7 +61,7 @@ public class PostController {
         postService.edit(postDto,id);
         return ResponseEntity.ok("Edited!");
     }
-    
+
     private Post convertToPost(PostDto postDto){
         Post post = new Post();
         post.setPostText(postDto.getPostText());
