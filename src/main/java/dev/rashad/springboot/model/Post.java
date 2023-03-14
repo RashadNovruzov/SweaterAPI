@@ -2,7 +2,6 @@ package dev.rashad.springboot.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -34,4 +33,7 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "user_id",referencedColumnName = "id",nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "post")
+    private List<Comment> comments;
 }

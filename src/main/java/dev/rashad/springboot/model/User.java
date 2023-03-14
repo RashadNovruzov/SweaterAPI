@@ -59,6 +59,9 @@ public class User implements UserDetails {
   @OneToMany(mappedBy = "user")
   private List<Post> posts;
 
+  @OneToMany(mappedBy = "author")
+  private List<Comment> comments;
+
   public String getName(){
     return this.username;
   }
