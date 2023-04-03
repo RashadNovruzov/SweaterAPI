@@ -40,7 +40,7 @@ public class PostService {
 
     public List<ResponsePostDto> findPostsByTag(String query) {
         List<ResponsePostDto> postDtos = new ArrayList<>();
-        List<Tag> tags = tagRepository.findByTagtitle(query);
+        List<Tag> tags = tagRepository.findByTagTitle(query);
         tags.forEach(
                 (t)->t.getPosts().forEach(
                         (p)->postDtos.add(new ResponsePostDto(p.getId(),p.getPostText(),p.getTags()))
